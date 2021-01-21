@@ -9,10 +9,10 @@ from sklearn.ensemble import RandomForestClassifier
 
 st.write("""
 # Pharmacy Store Prediction App
-This app predicts the **Store Value Group** !
+Aplikasi prediksi **Store Value** dari Apotek
 """)
 
-st.sidebar.header('Input Data')
+st.sidebar.header('Input Dataset')
 
 st.sidebar.markdown("""
 [Contoh file input](https://drive.google.com/file/d/1ZN3_UQP8HVzlH05lhIBUn1mSoRVpxpLn/view)
@@ -22,6 +22,9 @@ st.sidebar.markdown("""
 # Collects user input features into dataframe
 
 uploaded_file = st.sidebar.file_uploader("Upload File", type=["xlsx"])
+
+st.sidebar.header('Input Data Individu')
+
 if uploaded_file is not None:
     input_df = pd.read_excel(uploaded_file)
     X = input_df.drop("SbjNum", axis=1)
@@ -40,30 +43,19 @@ else:
     input_df = user_input_features()
     X = input_df.drop("SbjNum", axis=1)
 
-# PREDICT GROUP
-
 # Reads in saved classification model
 load_clf_group = pickle.load(open('DT Store Value Grup (16).pkl', 'rb'))
-
-# Apply model to make predictions
-prediction_group = load_clf_group.predict(X)
-prob_group = load_clf_group.predict_proba(X)
-
-st.subheader('Prediksi Grup')
-st.write(prediction_group)
-
-st.subheader('Peluang Grup')
-st.write(prob_group)
-
-# PREDICT OTC VALUE
-# Reads in saved classification model
 load_clf_otc = pickle.load(open('DT Store Value OTC (16).pkl', 'rb'))
 
 # Apply model to make predictions
+prediction_group = load_clf_group.predict(X)
 prediction_otc = load_clf_otc.predict(X)
 
-st.subheader('Prediksi OTC Value')
-st.write(prediction_otc)
+output_group = pd.DataFrame([input_df["SbjNum"], prediction_group]).T
+output_otc = pd.DataFrame([input_df["SbjNum"], prediction_otc]).T
 
-#st.subheader('Prediction Probability')
-#st.write(prob_group)
+st.subheader('Prediksi Grup')
+st.write(output_group)
+
+st.subheader('Prediksi OTC Value')
+st.write(output_otc)
