@@ -3,9 +3,9 @@ import pandas as pd
 import numpy as np
 import pickle
 from sklearn.ensemble import RandomForestClassifier
-import os
+#import os
 
-os.chdir("C:\\Users\\Adjie Buanafijar\\Documents\\Adjie\\StarCore\\Klasifikasi Pharmacy Store\\Streamlit")
+#os.chdir("C:\\Users\\Adjie Buanafijar\\Documents\\Adjie\\StarCore\\Klasifikasi Pharmacy Store\\Streamlit")
 
 st.write("""
 # Pharmacy Store Prediction App
