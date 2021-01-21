@@ -52,7 +52,9 @@ prediction_group = load_clf_group.predict(X)
 prediction_otc = load_clf_otc.predict(X)
 
 output_group = pd.DataFrame([input_df["SbjNum"], prediction_group]).T
+output_group.columns = ["SbjNum", "Grup"]
 output_otc = pd.DataFrame([input_df["SbjNum"], prediction_otc]).T
+output_otc.columns = ["SbjNum", "OTC Value"]
 
 st.subheader('Prediksi Grup')
 st.write(output_group)
