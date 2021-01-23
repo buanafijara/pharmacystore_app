@@ -1,8 +1,7 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
 import pickle
-from sklearn.ensemble import RandomForestClassifier
+import base64
 #import os
 
 #os.chdir("C:\\Users\\Adjie Buanafijar\\Documents\\Adjie\\StarCore\\Klasifikasi Pharmacy Store\\Streamlit")
@@ -51,13 +50,18 @@ load_clf_otc = pickle.load(open('DT Store Value OTC (16).pkl', 'rb'))
 prediction_group = load_clf_group.predict(X)
 prediction_otc = load_clf_otc.predict(X)
 
-output_group = pd.DataFrame([input_df["SbjNum"], prediction_group]).T
-output_group.columns = ["SbjNum", "Grup"]
-output_otc = pd.DataFrame([input_df["SbjNum"], prediction_otc]).T
-output_otc.columns = ["SbjNum", "OTC Value"]
+output = pd.DataFrame([input_df["SbjNum"], prediction_otc, prediction_group]).T
+output.columns = ["SbjNum", "Pred OTC Value", "Pred Grup"]
+output.set_index("SbjNum", inplace=True)
 
 st.subheader('Prediksi Grup')
-st.write(output_group)
+st.write(output)
 
-st.subheader('Prediksi OTC Value')
-st.write(output_otc)
+# Download Button
+def filedownload(df):
+    csv = df.to_csv(sep = ",")
+    b64 = base64.b64encode(csv.encode()).decode()  # strings <-> bytes conversions
+    href = f'<a href="data:file/csv;base64,{b64}" download="pred_pharmacystore.csv">Download CSV File</a>'
+    return href
+
+st.markdown(filedownload(output), unsafe_allow_html=True)
